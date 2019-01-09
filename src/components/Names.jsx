@@ -1,121 +1,50 @@
 import React from 'react';
 import "../styles/Names.css";
 
-class EditNames extends React.Component{
-    
-    constructor(props){
-
-        super(props);
-        this.state={
-            firstName: this.props.firstName,
-            lastName: this.props.lastName,
-            isSave: false,
-            isCancel: false
-        };
-
+class Input extends React.Component {
+    render() {
+        return this.props.x
+            ? (<div>{this.props.y}</div>)
+            : (<input defaultValue={this.props.y} type="text" />);
     }
-
-    clicked = (event) => {
-
-        if(event.target.id === "save-btn"){
-            this.setState({
-                isSave : !this.state.isSave
-            });
-        }
-
-        else if (event.target.id === "cancel-btn"){
-            this.setState({
-                isCancel: !this.state.isCancel
-            });
-        }
-    }
-
-    changeFirstName = (event) =>{
-        this.setState({
-            firstName: event.target.value
-        });
-    }
-
-    changeLastName = (event) => {
-        this.setState({
-            lastName: event.target.value
-        });
-    }
-    render(){
-        
-        if (!this.state.isSave && !this.state.isCancel){
-        return(
-            <div>
-                <label> First Name:
-                    <input type = "text" id="first-name-input"  placeholder="Enter first name" onChange={this.changeFirstName} value={this.state.firstName}/>
-                </label>
-                
-                <label> Last Name:
-                        <input type = "text" id= "last-name-input" placeholder= "Enter last name" onChange={this.changeLastName} value={this.state.lastName}/>
-                </label>
-
-                <button onClick={this.clicked} id="save-btn">Save</button>
-                <button onClick={this.clicked} id="cancel-btn">Cancel</button>
-            </div>
-        );
-        }
-
-        else{
-            if (this.state.isSave){
-                return(
-                    <DisplayNames firstName= {this.state.firstName} lastName = {this.state.lastName}/>
-                );
-            }
-            else{
-                return(
-                    <DisplayNames firstName= {this.props.firstName} lastName = {this.props.lastName}/>
-                );
-            }
-        }
-    }
-
 }
 
+class DisplayNames extends React.Component {
 
-class DisplayNames extends React.Component{
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
-            firstName: props.firstName,
-            lastName: props.lastName,
-            displayName: true
-        };
-
-        this.editName = this.editName.bind(this);
+            x: true,
+            f: this.props.first,
+            l: this.props.last,
+        }
     }
 
-    editName(){
-
-        this.setState({
-            displayName: !this.state.displayName
-        });
+    toggle() {
+        this.setState({x: !this.state.x});
     }
 
-    render(){
-
-        if (this.state.displayName){
-            return(
-            
-            <div className = "names-main-container">
-                <div id = "first-name">{this.state.firstName}</div>
-                <div id = "last-name">{this.state.lastName}</div>
-                <button id = "edit-btn" onClick={this.editName}>Edit</button>
-            </div>
-            );
+    myClick(e) {
+        e.preventDefault();
+        if (!this.state.x) {
+            this.setState({
+                f: e.target.children[0].value,
+                l: e.target.children[1].value
+            });
         }
+        this.toggle();
+    }
 
-        else{
-
-            return(
-                <EditNames firstName= {this.props.firstName} lastName = {this.props.lastName}/>
-            );
-        }
+    render() {
+        return (
+            <form onSubmit={(e) => {this.myClick(e)}}>
+                <Input x={this.state.x} y={this.state.f} />
+                <Input x={this.state.x} y={this.state.l} />
+                {this.state.x || <button type="button" onClick={() => this.toggle()}>Cancel</button>}
+                <button type="submit">{this.state.x ? "Edit" : "Save"}</button>
+            </form>
+        );
     }
 }
 

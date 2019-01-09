@@ -7,7 +7,7 @@ class MainRender extends React.Component{
     render(){
         return(
             <div className="main-container">
-                <Names firstName="Andrey" lastName="Shtukenberg"/>
+                <Names first="Andrey" last ="Shtukenberg"/>
                 <Folder/>
             </div>
         );
